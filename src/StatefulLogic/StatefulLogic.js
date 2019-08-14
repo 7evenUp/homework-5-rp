@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {getLoggedInUser} from '../utils'
 
 /*
   Render-props можно использовать для вынесения стейтфул логики
@@ -14,4 +13,21 @@ import {getLoggedInUser} from '../utils'
   Кнопка должна получать onClick коллбек из компонента-обёртки
 */
 
-export const WithTooltip = () => {}
+
+export default class WithTooltip extends Component {
+  state = {
+    isShown: false
+  }
+
+  render() {
+    const {children} = this.props
+    return children((event) => {
+      this.setState({isShown: !this.state.isShown})
+      if (isShown) {
+        event.target.appendChild(<div data-testid="tooltip">Hello, i'm Tooltip</div>)
+      } else {
+        event.target.removeChild(document.querySelector('[data-testid="tooltip"]'))
+      }
+    })
+  }
+}
