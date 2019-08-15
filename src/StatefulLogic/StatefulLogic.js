@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 /*
   Render-props можно использовать для вынесения стейтфул логики
@@ -19,15 +19,17 @@ export default class WithTooltip extends Component {
     isShown: false
   }
 
+  handleClick = (event) => {
+    this.setState({isShown: !this.state.isShown})
+  }
+
   render() {
     const {children} = this.props
-    return children((event) => {
-      this.setState({isShown: !this.state.isShown})
-      if (isShown) {
-        event.target.appendChild(<div data-testid="tooltip">Hello, i'm Tooltip</div>)
-      } else {
-        event.target.removeChild(document.querySelector('[data-testid="tooltip"]'))
-      }
-    })
+    return (
+      <Fragment>
+        {this.state.isShown && <div data-testid="tooltip">Hello, i'm Tooltip</div>}
+        {children(this.handleClick)}
+      </Fragment>
+    )
   }
 }
